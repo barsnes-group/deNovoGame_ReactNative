@@ -1,0 +1,12 @@
+{
+  "name": "rn_theNovo",
+  "displayName": "rn_theNovo",
+  "expo": {
+    "name": "rn_theNovo",
+    "slug": "rn_theNovo",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
