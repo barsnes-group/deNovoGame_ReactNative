@@ -1,5 +1,5 @@
-# theNovoGame_ReactNative
-Making the prototype of "The Novo Game" in React Native.
+# De Novo Game - React Native
+Making the prototype of "De Novo Game" in React Native.
 
 ## Requirements:
 * npm
