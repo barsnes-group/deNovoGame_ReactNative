@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { Button, Text, View, PanResponder, Animated, StyleSheet } from "react-native";
 
-
-//Boxes --> place in its own class?
-const Box1 = (props) => {
+//------------BOXES & BOX CONTAINER----------------------
+//TODO: Boxes --> lag egen klasse?
+const Box = (props) => {
     return (
         <View style={styles.row}>
+            <Text style={styles.text}>Box {props.type}</Text>
             <Animated.View
               style={[styles.square]}
             />
@@ -17,42 +18,35 @@ const boxContainer = () => {
     return (
         <View style={styles.square}>
             <>
-            <Box1/>
-            <Box2/>
+            <Box type="blue"/>
+            <Box type="red"/>
             </>
         </View>
     ); 
 }
 
 
-
-const Slot1 = (props) => {
+//-----------SLOTS & DROPZONE-----------------
+const Slot = (props) => {
   const [box, setBox] = useState(null);
 
   return (
+      //TODO: sett inn if med forskjellige styles
     <View style={styles.slot1}>
-        <Text style={styles.text}>Slot 2</Text>
+        <Text style={styles.text}>Slot {props.number}</Text>
     </View>
   );
 }
 
-const Slot2 = (props) => {
-    const [box, setBox] = useState(null);
-  
-    return (
-      <View style={styles.slot2}>   
-        <Text style={styles.text}>Slot 2</Text>
-      </View>
-    );
-  }
 
 const dropZone = () => {
     return (
         <View style={styles.dropZone}>
+            <Text style={styles.text}>Dropzone</Text>
             <View style={{flex: 1, flexDirection: 'row', alignContent: `stretch`}}>
                 <>
-                <Slot1/>
-                <Slot2/>
+                <Slot number="1"/>
+                <Slot number="2"/>
                 </>
             </View>
         </View>
@@ -63,14 +57,22 @@ export default dropZone;
 
 
 
-
+//TODO: fikse exp. default
 const App = () => {
     return (
-        <View style={styles.square}>
-            <>
-            <Box1/>
-            <Box2/>
-            </>
+        <View style={styles.mainContainer}>
+            <View style={styles.dropZone}>
+                <Text style={styles.text}>Dropzone</Text>
+            </View>
+
+            <View style={styles.boxContainer} />
+                <View style={styles.row}>
+                    <Draggable /> 
+                    <Draggable />
+                    <Draggable />
+                    <Draggable />
+                    <Draggable />
+                </View>
         </View>
     ); 
 }
@@ -79,11 +81,11 @@ const App = () => {
 
 
 
-
+//----------------STYLES----------------------
 let FINAL_INT = 30;
 const styles = StyleSheet.create({
     mainContainer: {
-      flex: 2
+      flex: 1
     },
     ballContainer: {
       height:200,
@@ -95,7 +97,7 @@ const styles = StyleSheet.create({
     },
     slot1: {
         backgroundColor: "lightblue",
-        width: FINAL_INT*4,
+
         height: FINAL_INT*4,
         alignItems: "stretch",
     },
@@ -113,7 +115,8 @@ const styles = StyleSheet.create({
       },  
     dropZone: {
         alignItems: "stretch",
-      backgroundColor: "#00334d"
+        backgroundColor: "#00334d",
+        height: FINAL_INT*8,
     },
     text: {
       marginTop: 25,
