@@ -7,6 +7,6 @@ import { registerRootComponent } from 'expo';
 // the environment is set up appropriately
 //registerRootComponent(App);
 
-import Draggable from './components/Draggable';
+import Draggable from './components/Items';
 
 registerRootComponent(Draggable);
