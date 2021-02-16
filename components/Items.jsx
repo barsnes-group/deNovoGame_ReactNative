@@ -18,16 +18,6 @@ const Box = (props) => {
         </View>
         );
     }    
-    
-    /*
-    return (
-        <View style={styles.row}>
-            <Text style={styles.text}>Box {props.type}</Text>
-            <Animated.View
-              style={[styles.square]}
-            />
-      </View>
-    );  */
 }
 
 const boxContainer = () => {
@@ -61,7 +51,7 @@ const Slot = (props) => {
 }
 
 
-const dropZone = () => {
+const App = () => {
     return (
         <View style={styles.mainContainer}>
         <View style={styles.dropZone}>
@@ -86,32 +76,7 @@ const dropZone = () => {
         </View>
     ); 
 }
-export default dropZone;
-
-
-
-
-//TODO: fikse exp. default
-const App = () => {
-    return (
-        <View style={styles.mainContainer}>
-            <View style={styles.dropZone}>
-                <Text style={styles.text}>Dropzone</Text>
-            </View>
-
-            <View style={styles.boxContainer} />
-                <View style={styles.row}>
-                    <Draggable /> 
-                    <Draggable />
-                    <Draggable />
-                    <Draggable />
-                    <Draggable />
-                </View>
-        </View>
-    ); 
-}
-
-
+export default App;
 
 
 
@@ -129,13 +94,13 @@ const styles = StyleSheet.create({
     },
     blueBox: {
         backgroundColor: "skyblue",
-        width: FINAL_INT*2,
-        height: FINAL_INT*2,
+        width: FINAL_INT*3,
+        height: FINAL_INT*3,
     },
     redBox: {
         backgroundColor: "pink",
-        width: FINAL_INT*2,
-        height: FINAL_INT*2,
+        width: FINAL_INT*3,
+        height: FINAL_INT*3,
     },
     slot1: {
         backgroundColor: "lightblue",
