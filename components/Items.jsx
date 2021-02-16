@@ -123,8 +123,9 @@ const styles = StyleSheet.create({
     },
     boxContainer: {
         alignItems: "stretch",
-        backgroundColor: "#red",
-        alignSelf: `flex-end`,
+        backgroundColor: "powderblue",
+        alignSelf: `stretch`,
+
     },
     blueBox: {
         backgroundColor: "skyblue",
@@ -132,13 +133,13 @@ const styles = StyleSheet.create({
         height: FINAL_INT*2,
     },
     redBox: {
-        backgroundColor: "red",
+        backgroundColor: "pink",
         width: FINAL_INT*2,
         height: FINAL_INT*2,
     },
     slot1: {
         backgroundColor: "lightblue",
-
+        width: FINAL_INT*4,
         height: FINAL_INT*4,
         alignItems: "stretch",
     },
