@@ -29,13 +29,19 @@ const boxContainer = () => {
 //-----------SLOTS & DROPZONE-----------------
 const Slot = (props) => {
   const [box, setBox] = useState(null);
-
-  return (
-      //TODO: sett inn if med forskjellige styles
-    <View style={styles.slot1}>
-        <Text style={styles.text}>Slot {props.number}</Text>
-    </View>
-  );
+  const number = props.number;
+        if (number == `1`) {
+            return (<View style={styles.slot1}> 
+            <Text style={styles.text}>Slot {props.number}</Text>
+             </View>
+             );
+        }
+        else if (number == `2`) {
+            return (<View style={styles.slot2}>
+                <Text style={styles.text}>Slot {props.number}</Text>
+            </View>
+            );
+        }    
 }
 
 
