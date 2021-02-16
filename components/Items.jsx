@@ -4,6 +4,22 @@ import { Button, Text, View, PanResponder, Animated, StyleSheet } from "react-na
 //------------BOXES & BOX CONTAINER----------------------
 //TODO: Boxes --> lag egen klasse?
 const Box = (props) => {
+    const type = props.type;
+    
+    if (type == `red`) {
+        return (<View style={styles.redBox}> 
+        <Text style={styles.text}>{props.type}</Text>
+         </View>
+         );
+    }
+    else if (type == `blue`) {
+        return (<View style={styles.blueBox}>
+            <Text style={styles.text}>{props.type}</Text>
+        </View>
+        );
+    }    
+    
+    /*
     return (
         <View style={styles.row}>
             <Text style={styles.text}>Box {props.type}</Text>
@@ -11,7 +27,7 @@ const Box = (props) => {
               style={[styles.square]}
             />
       </View>
-    );  
+    );  */
 }
 
 const boxContainer = () => {
@@ -28,7 +44,7 @@ const boxContainer = () => {
 
 //-----------SLOTS & DROPZONE-----------------
 const Slot = (props) => {
-  const [box, setBox] = useState(null);
+  const [box, setBox] = useState(null); 
   const number = props.number;
         if (number == `1`) {
             return (<View style={styles.slot1}> 
@@ -47,6 +63,7 @@ const Slot = (props) => {
 
 const dropZone = () => {
     return (
+        <View style={styles.mainContainer}>
         <View style={styles.dropZone}>
             <Text style={styles.text}>Dropzone</Text>
             <View style={{flex: 1, flexDirection: 'row', alignContent: `stretch`}}>
@@ -55,6 +72,17 @@ const dropZone = () => {
                 <Slot number="2"/>
                 </>
             </View>
+        </View>
+
+        <View style={styles.boxContainer}>
+            <Text style={styles.text}>BoxContainer</Text>
+           <View style={{flex: 1, flexDirection: 'row', alignContent: `stretch`}}>
+                <>
+                <Box type="red"/>
+                <Box type="blue"/>
+                </>
+            </View> 
+        </View>
         </View>
     ); 
 }
@@ -93,11 +121,18 @@ const styles = StyleSheet.create({
     mainContainer: {
       flex: 1
     },
-    ballContainer: {
-      height:200,
+    boxContainer: {
+        alignItems: "stretch",
+        backgroundColor: "#red",
+        alignSelf: `flex-end`,
     },
-    square: {
+    blueBox: {
         backgroundColor: "skyblue",
+        width: FINAL_INT*2,
+        height: FINAL_INT*2,
+    },
+    redBox: {
+        backgroundColor: "red",
         width: FINAL_INT*2,
         height: FINAL_INT*2,
     },
