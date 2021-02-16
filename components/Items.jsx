@@ -20,17 +20,6 @@ const Box = (props) => {
     }    
 }
 
-const boxContainer = () => {
-    return (
-        <View style={styles.square}>
-            <>
-            <Box type="blue"/>
-            <Box type="red"/>
-            </>
-        </View>
-    ); 
-}
-
 
 //-----------SLOTS & DROPZONE-----------------
 const Slot = (props) => {
@@ -70,6 +59,8 @@ const App = () => {
                 <>
                 <Box type="red"/>
                 <Box type="blue"/>
+                <Box type="red"/>
+                <Box type="blue"/>
                 </>
             </View> 
         </View>
@@ -85,12 +76,6 @@ let FINAL_INT = 30;
 const styles = StyleSheet.create({
     mainContainer: {
       flex: 1
-    },
-    boxContainer: {
-        alignItems: "stretch",
-        backgroundColor: "powderblue",
-        alignSelf: `stretch`,
-
     },
     blueBox: {
         backgroundColor: "skyblue",
@@ -119,7 +104,14 @@ const styles = StyleSheet.create({
     }, 
     col: {
         flexDirection: "column"
-      },  
+    },  
+      boxContainer: {
+        alignItems: "stretch",
+        backgroundColor: "powderblue",
+        alignSelf: `stretch`,
+        height: FINAL_INT*8,
+
+    },
     dropZone: {
         alignItems: "stretch",
         backgroundColor: "#00334d",
