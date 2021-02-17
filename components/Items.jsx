@@ -19,7 +19,6 @@ function Box(props) {
     }    
 }
 
-
 function MovableBox(props) {
     const type = props.type;
     const pan = useRef(new Animated.ValueXY()).current;
@@ -30,8 +29,9 @@ function MovableBox(props) {
           null,
           { dx: pan.x, dy: pan.y }
         ]),
-        onPanResponderRelease: () => {
-            //TODO: add if in slots 
+        onPanResponderRelease: (e, gesture) => {
+            //TODO: add if in slots , function?
+
           Animated.spring(pan, { toValue: { x: 0, y: 0 } }).start();
         }
       })
@@ -61,15 +61,12 @@ function MovableBox(props) {
                     }}
                     {...panResponder.panHandlers}
                 >
-
                 <View style={styles.blueBox} />       
                 </Animated.View>
             </View>
         );
     }
 }
-
-
 
 //-----------SLOTS & DROPZONE-----------------
 // const Slot = (props) => {}
@@ -91,7 +88,6 @@ function Slot(props) {
         }    
 }
 
-
 function App() {
     return (
         <View style={styles.mainContainer}>
@@ -111,7 +107,7 @@ function App() {
                 <>
                 <Box type="red"/>
                 <Box type="blue"/>
-                <Box type="red"/>
+
                 <MovableBox type="red"/>
                 <MovableBox type="blue"/>
                 </> 
@@ -121,8 +117,6 @@ function App() {
     ); 
 }
 export default App;
-
-
 
 //----------------STYLES----------------------
 let FINAL_INT = 30;
@@ -134,11 +128,15 @@ const styles = StyleSheet.create({
         backgroundColor: "skyblue",
         width: FINAL_INT*3,
         height: FINAL_INT*3,
+        borderWidth: 1,
+        borderColor: "black",
     },
     redBox: {
         backgroundColor: "pink",
         width: FINAL_INT*3,
         height: FINAL_INT*3,
+        borderWidth: 1,
+        borderColor: "black",
     },
     slot1: {
         backgroundColor: "lightblue",
