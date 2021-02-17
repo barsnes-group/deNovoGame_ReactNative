@@ -2,8 +2,7 @@ import React, { useState } from "react";
 import { Button, Text, View, PanResponder, Animated, StyleSheet } from "react-native";
 
 //------------BOXES & BOX CONTAINER----------------------
-//TODO: Boxes --> lag egen klasse?
-const Box = (props) => {
+function Box(props) {
     const type = props.type;
     
     if (type == `red`) {
@@ -22,17 +21,20 @@ const Box = (props) => {
 
 
 //-----------SLOTS & DROPZONE-----------------
-const Slot = (props) => {
+// const Slot = (props) => {}
+function Slot(props) {
   const [box, setBox] = useState(null); 
   const number = props.number;
         if (number == `1`) {
-            return (<View style={styles.slot1}> 
-            <Text style={styles.text}>Slot {props.number}</Text>
-             </View>
+            return (
+            <View style={styles.slot1}> 
+                <Text style={styles.text}>Slot {props.number}</Text>
+            </View>
              );
         }
         else if (number == `2`) {
-            return (<View style={styles.slot2}>
+            return (
+            <View style={styles.slot2}>
                 <Text style={styles.text}>Slot {props.number}</Text>
             </View>
             );
@@ -40,7 +42,7 @@ const Slot = (props) => {
 }
 
 
-const App = () => {
+function App() {
     return (
         <View style={styles.mainContainer}>
         <View style={styles.dropZone}>
@@ -98,14 +100,8 @@ const styles = StyleSheet.create({
         width: FINAL_INT*4,
         height: FINAL_INT*4,
         alignItems: "stretch",
-    },
-    row: {
-      flexDirection: "row"
     }, 
-    col: {
-        flexDirection: "column"
-    },  
-      boxContainer: {
+    boxContainer: {
         alignItems: "stretch",
         backgroundColor: "powderblue",
         alignSelf: `stretch`,
