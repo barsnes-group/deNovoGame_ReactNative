@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import { Button, Text, View, PanResponder, Animated, StyleSheet } from "react-native";
+import { Text, View, PanResponder, Animated, StyleSheet } from "react-native";
 
 //------------BOXES & BOX CONTAINER----------------------
 function Box(props) {
@@ -21,6 +21,7 @@ function Box(props) {
 
 
 function MovableBox(props) {
+    const type = props.type;
     const pan = useRef(new Animated.ValueXY()).current;
     const panResponder = useRef(
       PanResponder.create({
@@ -30,36 +31,42 @@ function MovableBox(props) {
           { dx: pan.x, dy: pan.y }
         ]),
         onPanResponderRelease: () => {
+            //TODO: add if in slots 
           Animated.spring(pan, { toValue: { x: 0, y: 0 } }).start();
         }
       })
     ).current;
   
-    return (
-      <View style={styles.BoxContainer}>
-        <Animated.View
-          style={{
-            transform: [{ translateX: pan.x }, { translateY: pan.y }]
-          }}
-          {...panResponder.panHandlers}
-        >
+    if (type == "red") {
+        return (
+            <View>
+                <Animated.View
+                    style={{
+                        transform: [{ translateX: pan.x }, { translateY: pan.y }]
+                    }}
+                    {...panResponder.panHandlers}
+                >
+                <View style={styles.redBox} />       
+                </Animated.View>
+            </View>
+        );
+    }
 
-            if (type == `red`) {
-                <View style={styles.redBox}> 
-                    <Text style={styles.text}>{props.type}</Text>
-                </View>
-            }
-            else if (type == `blue`) {
-               <View style={styles.blueBox}>
-                    <Text style={styles.text}>{props.type}</Text>
-                </View>
-            } 
+    else if (type == "blue") {
+        return (
+            <View>
+                <Animated.View
+                    style={{
+                        transform: [{ translateX: pan.x }, { translateY: pan.y }]
+                    }}
+                    {...panResponder.panHandlers}
+                >
 
-
-        </Animated.View>
-      </View>
-    );
-
+                <View style={styles.blueBox} />       
+                </Animated.View>
+            </View>
+        );
+    }
 }
 
 
@@ -68,14 +75,14 @@ function MovableBox(props) {
 // const Slot = (props) => {}
 function Slot(props) { 
   const number = props.number;
-        if (number == `1`) {
+        if (number == "1") {
             return (
             <View style={styles.slot1}> 
                 <Text style={styles.text}>Slot {props.number}</Text>
             </View>
              );
         }
-        else if (number == `2`) {
+        else if (number == "2") {
             return (
             <View style={styles.slot2}>
                 <Text style={styles.text}>Slot {props.number}</Text>
@@ -90,7 +97,7 @@ function App() {
         <View style={styles.mainContainer}>
         <View style={styles.dropZone}>
             <Text style={styles.text}>Dropzone</Text>
-            <View style={{flex: 1, flexDirection: 'row', alignContent: `stretch`}}>
+            <View style={{flex: 1, flexDirection: "row", alignContent: "stretch"}}>
                 <>
                 <Slot number="1"/>
                 <Slot number="2"/>
@@ -100,7 +107,7 @@ function App() {
 
         <View style={styles.boxContainer}>
             <Text style={styles.text}>BoxContainer</Text>
-            <View style={{flex: 1, flexDirection: 'row', alignContent: `stretch`}}>
+            <View style={{flex: 1, flexDirection: "row"}}>
                 <>
                 <Box type="red"/>
                 <Box type="blue"/>
@@ -148,7 +155,6 @@ const styles = StyleSheet.create({
     boxContainer: {
         alignItems: "stretch",
         backgroundColor: "powderblue",
-        alignSelf: `stretch`,
         height: FINAL_INT*8,
 
     },
