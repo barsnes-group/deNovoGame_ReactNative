@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { Button, Text, View, PanResponder, Animated, StyleSheet } from "react-native";
 
 //------------BOXES & BOX CONTAINER----------------------
@@ -20,10 +20,53 @@ function Box(props) {
 }
 
 
+function MovableBox(props) {
+    const pan = useRef(new Animated.ValueXY()).current;
+    const panResponder = useRef(
+      PanResponder.create({
+        onMoveShouldSetPanResponder: () => true,
+        onPanResponderMove: Animated.event([
+          null,
+          { dx: pan.x, dy: pan.y }
+        ]),
+        onPanResponderRelease: () => {
+          Animated.spring(pan, { toValue: { x: 0, y: 0 } }).start();
+        }
+      })
+    ).current;
+  
+    return (
+      <View style={styles.BoxContainer}>
+        <Animated.View
+          style={{
+            transform: [{ translateX: pan.x }, { translateY: pan.y }]
+          }}
+          {...panResponder.panHandlers}
+        >
+
+            if (type == `red`) {
+                <View style={styles.redBox}> 
+                    <Text style={styles.text}>{props.type}</Text>
+                </View>
+            }
+            else if (type == `blue`) {
+               <View style={styles.blueBox}>
+                    <Text style={styles.text}>{props.type}</Text>
+                </View>
+            } 
+
+
+        </Animated.View>
+      </View>
+    );
+
+}
+
+
+
 //-----------SLOTS & DROPZONE-----------------
 // const Slot = (props) => {}
-function Slot(props) {
-  const [box, setBox] = useState(null); 
+function Slot(props) { 
   const number = props.number;
         if (number == `1`) {
             return (
@@ -57,13 +100,14 @@ function App() {
 
         <View style={styles.boxContainer}>
             <Text style={styles.text}>BoxContainer</Text>
-           <View style={{flex: 1, flexDirection: 'row', alignContent: `stretch`}}>
+            <View style={{flex: 1, flexDirection: 'row', alignContent: `stretch`}}>
                 <>
                 <Box type="red"/>
                 <Box type="blue"/>
                 <Box type="red"/>
-                <Box type="blue"/>
-                </>
+                <MovableBox type="red"/>
+                <MovableBox type="blue"/>
+                </> 
             </View> 
         </View>
         </View>
