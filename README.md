@@ -3,8 +3,8 @@ Making the prototype of "De Novo Game" in React Native.
 
 ## Requirements:
 ```bash  
- $ npm
- $ npm install --global expo-cli
+$ npm
+$ npm install --global expo-cli
 ```
 
 ## To run:
