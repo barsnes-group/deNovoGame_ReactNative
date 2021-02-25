@@ -2,10 +2,14 @@
 Making the prototype of "De Novo Game" in React Native.
 
 ## Requirements:
+ 
 * npm
-* npm install --global expo-cli
-
+```bash 
+$ npm install --global expo-cli
+```
 
 ## To run:
-* npm install
-* npm run web
+```bash 
+$ npm install
+$ npm run web
+```
