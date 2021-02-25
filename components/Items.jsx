@@ -1,6 +1,7 @@
 import React, { useState, useRef } from "react";
 import { Text, View, PanResponder, Animated, StyleSheet } from "react-native";
 
+
 //------------BOXES & BOX CONTAINER----------------------
 function Box(props) {
     const type = props.type;
@@ -30,13 +31,18 @@ function MovableBox(props) {
           { dx: pan.x, dy: pan.y }
         ]),
         onPanResponderRelease: (e, gesture) => {
-            //TODO: add if in slots , function?
+            //TODO: add if in slots 
 
-          Animated.spring(pan, { toValue: { x: 0, y: 0 } }).start();
+            if (isDropArea(gesture)) {
+                Animated.spring(pan, { toValue: { x: pan.x, y: pan.y } }).start();
+            } else {
+                Animated.spring(pan, { toValue: { x: 0, y: 0 } }).start();
+            }
         }
       })
     ).current;
   
+    //make red and blue boxes
     if (type == "red") {
         return (
             <View>
@@ -69,7 +75,6 @@ function MovableBox(props) {
 }
 
 //-----------SLOTS & DROPZONE-----------------
-// const Slot = (props) => {}
 function Slot(props) { 
   const number = props.number;
         if (number == "1") {
@@ -88,31 +93,37 @@ function Slot(props) {
         }    
 }
 
+function isDropArea(gesture) {
+    return gesture.moveY < 200; 
+}
+
+function isSlot1(gesture) {
+    return <gesture className="target"> </gesture>;
+}
+
 function App() {
     return (
         <View style={styles.mainContainer}>
-        <View style={styles.dropZone}>
-            <Text style={styles.text}>Dropzone</Text>
-            <View style={{flex: 1, flexDirection: "row", alignContent: "stretch"}}>
-                <>
-                <Slot number="1"/>
-                <Slot number="2"/>
-                </>
+            <View style={styles.dropZone}>
+                <Text style={styles.text}>Dropzone</Text>
+                <View style={{flex: 1, flexDirection: "row", alignContent: "stretch"}}>
+                    <>
+                    <Slot number="1"/>
+                    <Slot number="2"/>
+                    </>
+                </View>
             </View>
-        </View>
 
-        <View style={styles.boxContainer}>
-            <Text style={styles.text}>BoxContainer</Text>
-            <View style={{flex: 1, flexDirection: "row"}}>
-                <>
-                <Box type="red"/>
-                <Box type="blue"/>
-
-                <MovableBox type="red"/>
-                <MovableBox type="blue"/>
-                </> 
-            </View> 
-        </View>
+            <View style={styles.boxContainer}>
+                <Text style={styles.text}>BoxContainer</Text>
+                <View style={{flex: 1, flexDirection: "row"}}>
+                    <>
+                    <MovableBox type="red"/>
+                    <MovableBox type="blue"/>
+                    <MovableBox type="red"/>
+                    </> 
+                </View> 
+            </View>
         </View>
     ); 
 }
