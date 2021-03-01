@@ -94,12 +94,20 @@ function Slot(props) {
 }
 
 function isDropArea(gesture) {
-    return gesture.moveY < 200; 
+    alert(gesture.type)
+    if (gesture.type == 'blue') {
+        if (gesture.moveY < 200) {
+            if (gesture.moveX > 0 && gesture.moveX < 120) {
+                return true;
+            }
+        }
+        return false;
+
+    } 
+
+   
 }
 
-function isSlot1(gesture) {
-    return <gesture className="target"> </gesture>;
-}
 
 function App() {
     return (
