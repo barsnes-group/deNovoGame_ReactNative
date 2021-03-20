@@ -1,26 +1,13 @@
-import React, { useState, useRef } from "react";
+import React, { useRef, useState } from "react";
 import { Text, View, PanResponder, Animated, StyleSheet } from "react-native";
-import { log } from "react-native-reanimated";
 
-//------------BOXES & BOX CONTAINER----------------------
-function Box(props) {
-  const type = props.type;
+//TODO: box you pick is on top
 
-  if (type == `red`) {
-    return (
-      <View style={styles.redBox}>
-        <Text style={styles.text}>{props.type}</Text>
-      </View>
-    );
-  } else if (type == `blue`) {
-    return (
-      <View style={styles.blueBox}>
-        <Text style={styles.text}>{props.type}</Text>
-      </View>
-    );
-  }
-}
-
+/**
+ * Component of movable boxes
+ * @param {*} props 
+ * @returns 
+ */
 function MovableBox(props) {
   const type = props.type;
   const pan = useRef(new Animated.ValueXY()).current;
@@ -29,7 +16,6 @@ function MovableBox(props) {
       onMoveShouldSetPanResponder: () => true,
       onPanResponderMove: Animated.event([null, { dx: pan.x, dy: pan.y }]),
       onPanResponderRelease: (e, gesture) => {
-        //TODO: add if in slots
         if (isDropArea(gesture, type)) {
           Animated.spring(pan, { toValue: { x: pan.x, y: pan.y } }).start();
         } else {
@@ -39,38 +25,30 @@ function MovableBox(props) {
     })
   ).current;
 
-  //make red and blue boxes
-  if (type == "red") {
-    return (
-      <View>
-        <Animated.View
-          style={{
-            transform: [{ translateX: pan.x }, { translateY: pan.y }],
-          }}
-          {...panResponder.panHandlers}
-        >
-          <View style={styles.redBox} />
-        </Animated.View>
-      </View>
-    );
-  } else if (type == "blue") {
-    return (
-      <View>
-        <Animated.View
-          style={{
-            transform: [{ translateX: pan.x }, { translateY: pan.y }],
-          }}
-          {...panResponder.panHandlers}
-        >
-          <View style={styles.blueBox} />
-        </Animated.View>
-      </View>
-    );
-  }
+
+  return (
+    <View>
+      <Animated.View
+        style={{
+          transform: [{ translateX: pan.x }, { translateY: pan.y }],
+        }}
+        {...panResponder.panHandlers}
+      >
+        <View style={type=="red" ? styles.redBox : styles.blueBox } />
+      </Animated.View>
+    </View>
+  );
 }
 
-//-----------SLOTS & DROPZONE-----------------
-function Slot(props) {
+//-----------SLOTS-----------------
+//TODO: box in the middle of slot
+//teng boks hvis slot ikke opptatt
+
+/**
+ * Component of different types of slots
+ * Number represent the type of slot
+ */
+function Slot(props, id) {
   const number = props.number;
   if (number == "1") {
     return (
@@ -87,6 +65,16 @@ function Slot(props) {
   }
 }
 
+//TODO: only one box per slot
+//TODO: find element on position
+//TODO: don't hardcode slots?
+
+/**
+ * Function that check if box can go in the slot
+ * @param {PanResonderGestureState} gesture 
+ * @param {any} type 
+ * @returns true/false
+ */
 function isDropArea(gesture, type) {
   if (gesture.moveY > 200) {
     return false;
@@ -107,10 +95,8 @@ function App() {
         <View
           style={{ flex: 1, flexDirection: "row", alignContent: "stretch" }}
         >
-          <>
-            <Slot number="1" />
-            <Slot number="2" />
-          </>
+          <Slot number="1" />
+          <Slot number="2" />
         </View>
       </View>
 

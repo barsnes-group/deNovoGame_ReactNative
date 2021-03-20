@@ -7,6 +7,10 @@ import { registerRootComponent } from 'expo';
 // the environment is set up appropriately
 //registerRootComponent(App);
 
-import App from './components/Items.jsx';
+//Use dnd from react native page  
+import App from './App/Views/DnD.jsx';
+
+//Use dnd from easy_dnd package
+//import App from './Views/Test_easy_dnd.jsx';
 
 registerRootComponent(App);
