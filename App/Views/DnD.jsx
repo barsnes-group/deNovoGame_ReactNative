@@ -1,21 +1,33 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
+import { render } from "react-dom";
 import { Text, View, PanResponder, Animated, StyleSheet } from "react-native";
+import { EventRegister } from "react-native-event-listeners";
 
 //TODO: box you pick is on top
 
 /**
  * Component of movable boxes
- * @param {*} props 
- * @returns 
+ * @param {*} props
+ * @returns
  */
-function MovableBox(props) {
+function MovableBox(props) {  
+  const myRef = useRef(null);
   const type = props.type;
   const pan = useRef(new Animated.ValueXY()).current;
+
+
   const panResponder = useRef(
     PanResponder.create({
       onMoveShouldSetPanResponder: () => true,
       onPanResponderMove: Animated.event([null, { dx: pan.x, dy: pan.y }]),
       onPanResponderRelease: (e, gesture) => {
+       
+        EventRegister.emit('dropBox', myRef.current.measure( (width, height) => {
+          console.log("width: ", width, "height: ", height)
+          return(width, height)
+        }))
+
+        //TODO: send med koordinater til drop event
         if (isDropArea(gesture, type)) {
           Animated.spring(pan, { toValue: { x: pan.x, y: pan.y } }).start();
         } else {
@@ -24,22 +36,27 @@ function MovableBox(props) {
       },
     })
   ).current;
-
-
+  
   return (
     <View>
       <Animated.View
+      ref={myRef}
         style={{
           transform: [{ translateX: pan.x }, { translateY: pan.y }],
         }}
         {...panResponder.panHandlers}
-      >
-        <View style={type=="red" ? styles.redBox : styles.blueBox } />
+        >
+        
+     
+        
+
+        <View style={type == "red" ? styles.redBox : styles.blueBox} />
       </Animated.View>
     </View>
   );
 }
 
+//ref={(ref) => { this.myRef = ref; }}
 //-----------SLOTS-----------------
 //TODO: box in the middle of slot
 //teng boks hvis slot ikke opptatt
@@ -48,21 +65,26 @@ function MovableBox(props) {
  * Component of different types of slots
  * Number represent the type of slot
  */
-function Slot(props, id) {
+function Slot(props) {
   const number = props.number;
-  if (number == "1") {
+  const [box, setBox] = useState(0);
+  useEffect(() => {
+    let listener = EventRegister.addEventListener("dropBox",setBox(number));
+      //TODO sjekke om koordinater matcher egen pos
+      //console.log("data", data)
+
+  });
+
+  if (box != 0 ) {
     return (
-      <View style={styles.slot1}>
-        <Text style={styles.text}>Slot {props.number}</Text>
+      <View>
+        <Text>slot {number}</Text>
       </View>
-    );
-  } else if (number == "2") {
-    return (
-      <View style={styles.slot2}>
-        <Text style={styles.text}>Slot {props.number}</Text>
-      </View>
-    );
+    )
   }
+
+
+  return <View style={number == "1" ? styles.slot1 : styles.slot2} />;
 }
 
 //TODO: only one box per slot
@@ -71,8 +93,8 @@ function Slot(props, id) {
 
 /**
  * Function that check if box can go in the slot
- * @param {PanResonderGestureState} gesture 
- * @param {any} type 
+ * @param {PanResonderGestureState} gesture
+ * @param {any} type
  * @returns true/false
  */
 function isDropArea(gesture, type) {
