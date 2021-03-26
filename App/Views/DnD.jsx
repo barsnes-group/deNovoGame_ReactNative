@@ -20,13 +20,13 @@ function MovableBox(props) {
       onMoveShouldSetPanResponder: () => true,
       onPanResponderMove: Animated.event([null, { dx: pan.x, dy: pan.y }]),
       onPanResponderRelease: (e, gesture) => {
-        myRef.current.measure((width, height) => {
+        myRef.current.measureInWindow((x, y) => {
           var dict = {
             type: type,
-            x: width,
-            y: height,
+            x: x,
+            y: y,
           };
-          console.log("x, y", dict);
+          console.log(dict);
 
           EventRegister.emit("dropBox", dict);
         });
@@ -69,18 +69,22 @@ function Slot(props) {
   const number = props.number;
   const [box, setBox] = useState(0);
   useEffect(() => {
-    let listener = EventRegister.addEventListener("dropBox", (data) => {
-      console.log("data", data);
-      //unpacke
+    EventRegister.addEventListener("dropBox", (data) => {
+      //unpacke dict
       var x = data.x;
       var y = data.y;
       var box_type = data.type;
 
-      var slot_x = 30 * number;
-      var slot_x_max = slot_x + 30;
+      var slot_x = 120 * number;
+      var slot_x_max = slot_x + 120;
+      var slot_y = 120;
+
       //if width og h er innenfor slot
-      if (y > slot_x) {
-        //setbox(())
+      if (x >= slot_x && x <= slot_x_max) {
+        setBox(box);
+        console.log("in slot", x, slot_x, slot_x_max);
+      } else {
+        console.log("not in slot", x, slot_x, slot_x_max);
       }
     });
   });
@@ -95,10 +99,6 @@ function Slot(props) {
 
   return <View style={number == "1" ? styles.slot1 : styles.slot2} />;
 }
-
-//TODO: only one box per slot
-//TODO: find element on position
-//TODO: don't hardcode slots?
 
 /**
  * Function that check if box can go in the slot
