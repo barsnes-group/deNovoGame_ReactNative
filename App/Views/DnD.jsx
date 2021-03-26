@@ -28,10 +28,10 @@ function MovableBox(props) {
           };
           console.log(dict);
 
+          //send med koordinater til drop event
           EventRegister.emit("dropBox", dict);
         });
 
-        //TODO: send med koordinater til drop event
         if (isDropArea(gesture, type)) {
           Animated.spring(pan, { toValue: { x: pan.x, y: pan.y } }).start();
         } else {
@@ -55,18 +55,13 @@ function MovableBox(props) {
     </View>
   );
 }
-
-//ref={(ref) => { this.myRef = ref; }}
-//-----------SLOTS-----------------
-//TODO: box in the middle of slot
-//teng boks hvis slot ikke opptatt
-
 /**
  * Component of different types of slots
  * Number represent the type of slot
  */
 function Slot(props) {
   const number = props.number;
+  const type = props.type;
   const [box, setBox] = useState(0);
   useEffect(() => {
     EventRegister.addEventListener("dropBox", (data) => {
@@ -79,12 +74,11 @@ function Slot(props) {
       var slot_x_max = slot_x + 120;
       var slot_y = 120;
 
-      //if width og h er innenfor slot
-      if (x >= slot_x && x <= slot_x_max) {
+      if (x >= slot_x && x <= slot_x_max && get_type == type) {
         setBox(box);
-        console.log("in slot", x, slot_x, slot_x_max);
+        console.log("in slot", number, x, slot_x, slot_x_max);
       } else {
-        console.log("not in slot", x, slot_x, slot_x_max);
+        console.log("not in slot", number, x, slot_x, slot_x_max);
       }
     });
   });
@@ -97,25 +91,32 @@ function Slot(props) {
     );
   }
 
-  return <View style={number == "1" ? styles.slot1 : styles.slot2} />;
+  return <View style={number == "0" ? styles.slot0 : styles.slot1} />;
 }
 
 /**
- * Function that check if box can go in the slot
+ * check if a box can go in any slot
  * @param {PanResonderGestureState} gesture
  * @param {any} type
  * @returns true/false
  */
-function isDropArea(gesture, type) {
-  if (gesture.moveY > 200) {
-    return false;
+
+function isDropArea(gesture, type, slots, x, y) {
+  //TODO: sjekk hvilken slot nr du er på
+  var number = Math.floor(x / 120);
+  var slot_x = number * 120;
+  var slot_x_max = slot_x + 120;
+
+  //TODO: sjekke om farge er riktig
+  slots = [];
+  get_type = slots[number];
+
+  if (x >= slot_x && x <= slot_x_max && get_type == type) {
+    setBox(box);
+    console.log("in slot", number, x, slot_x, slot_x_max);
+  } else {
+    console.log("not in slot", number, x, slot_x, slot_x_max);
   }
-  if (type == "blue" && gesture.moveX >= 0 && gesture.moveX < 120) {
-    return true;
-  } else if (type == "red" && gesture.moveX > 120 && gesture.moveX < 240) {
-    return true;
-  }
-  return false;
 }
 
 function App() {
@@ -126,8 +127,8 @@ function App() {
         <View
           style={{ flex: 1, flexDirection: "row", alignContent: "stretch" }}
         >
-          <Slot number="1" />
-          <Slot number="2" />
+          <Slot number="0" type="red" />
+          <Slot number="1" type="blue" />
         </View>
       </View>
 
@@ -166,13 +167,13 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "black",
   },
-  slot1: {
+  slot0: {
     backgroundColor: "lightblue",
     width: FINAL_INT * 4,
     height: FINAL_INT * 4,
     alignItems: "stretch",
   },
-  slot2: {
+  slot1: {
     backgroundColor: "pink",
     width: FINAL_INT * 4,
     height: FINAL_INT * 4,
