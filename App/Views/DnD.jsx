@@ -3,29 +3,33 @@ import { render } from "react-dom";
 import { Text, View, PanResponder, Animated, StyleSheet } from "react-native";
 import { EventRegister } from "react-native-event-listeners";
 
-//TODO: box you pick is on top
+//TODO: når boks mottar pos, så må slot oppdatere seg som opptatt + visualisere hvis boks er på rett slot
 
 /**
  * Component of movable boxes
  * @param {*} props
  * @returns
  */
-function MovableBox(props) {  
+function MovableBox(props) {
   const myRef = useRef(null);
   const type = props.type;
   const pan = useRef(new Animated.ValueXY()).current;
-
 
   const panResponder = useRef(
     PanResponder.create({
       onMoveShouldSetPanResponder: () => true,
       onPanResponderMove: Animated.event([null, { dx: pan.x, dy: pan.y }]),
       onPanResponderRelease: (e, gesture) => {
-       
-        EventRegister.emit('dropBox', myRef.current.measure( (width, height) => {
-          console.log("width: ", width, "height: ", height)
-          return(width, height)
-        }))
+        myRef.current.measure((width, height) => {
+          var dict = {
+            type: type,
+            x: width,
+            y: height,
+          };
+          console.log("x, y", dict);
+
+          EventRegister.emit("dropBox", dict);
+        });
 
         //TODO: send med koordinater til drop event
         if (isDropArea(gesture, type)) {
@@ -36,20 +40,16 @@ function MovableBox(props) {
       },
     })
   ).current;
-  
+
   return (
     <View>
       <Animated.View
-      ref={myRef}
+        ref={myRef}
         style={{
           transform: [{ translateX: pan.x }, { translateY: pan.y }],
         }}
         {...panResponder.panHandlers}
-        >
-        
-     
-        
-
+      >
         <View style={type == "red" ? styles.redBox : styles.blueBox} />
       </Animated.View>
     </View>
@@ -69,20 +69,29 @@ function Slot(props) {
   const number = props.number;
   const [box, setBox] = useState(0);
   useEffect(() => {
-    let listener = EventRegister.addEventListener("dropBox",setBox(number));
-      //TODO sjekke om koordinater matcher egen pos
-      //console.log("data", data)
+    let listener = EventRegister.addEventListener("dropBox", (data) => {
+      console.log("data", data);
+      //unpacke
+      var x = data.x;
+      var y = data.y;
+      var box_type = data.type;
 
+      var slot_x = 30 * number;
+      var slot_x_max = slot_x + 30;
+      //if width og h er innenfor slot
+      if (y > slot_x) {
+        //setbox(())
+      }
+    });
   });
 
-  if (box != 0 ) {
+  if (box != 0) {
     return (
       <View>
         <Text>slot {number}</Text>
       </View>
-    )
+    );
   }
-
 
   return <View style={number == "1" ? styles.slot1 : styles.slot2} />;
 }
