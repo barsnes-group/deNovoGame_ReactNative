@@ -30,13 +30,13 @@ function MovableBox(props) {
 
           //send med koordinater til drop event
           EventRegister.emit("dropBox", dict);
-        });
 
-        if (isDropArea(gesture, type)) {
-          Animated.spring(pan, { toValue: { x: pan.x, y: pan.y } }).start();
-        } else {
-          Animated.spring(pan, { toValue: { x: 0, y: 0 } }).start();
-        }
+          if (isDropArea(type, x, y)) {
+            Animated.spring(pan, { toValue: { x: pan.x, y: pan.y } }).start();
+          } else {
+            Animated.spring(pan, { toValue: { x: 0, y: 0 } }).start();
+          }
+        });
       },
     })
   ).current;
@@ -61,7 +61,7 @@ function MovableBox(props) {
  */
 function Slot(props) {
   const number = props.number;
-  const type = props.type;
+  const slot_type = props.type;
   const [box, setBox] = useState(0);
   useEffect(() => {
     EventRegister.addEventListener("dropBox", (data) => {
@@ -74,8 +74,7 @@ function Slot(props) {
       var slot_x_max = slot_x + 120;
       var slot_y = 120;
 
-      if (x >= slot_x && x <= slot_x_max && get_type == type) {
-        setBox(box);
+      if (x >= slot_x && x <= slot_x_max && slot_type == box_type) {
         console.log("in slot", number, x, slot_x, slot_x_max);
       } else {
         console.log("not in slot", number, x, slot_x, slot_x_max);
@@ -83,6 +82,7 @@ function Slot(props) {
     });
   });
 
+  //TODO: oppdater state til slot når occupied
   if (box != 0) {
     return (
       <View>
@@ -97,29 +97,44 @@ function Slot(props) {
 /**
  * check if a box can go in any slot
  * @param {PanResonderGestureState} gesture
- * @param {any} type
+ * @param {any} box_type
  * @returns true/false
  */
 
-function isDropArea(gesture, type, slots, x, y) {
+function isDropArea(box_type, x, y) {
   //TODO: sjekk hvilken slot nr du er på
-  var number = Math.floor(x / 120);
-  var slot_x = number * 120;
+  var on_slot_number = Math.floor(x / 120);
+  var slot_x = on_slot_number * 120;
   var slot_x_max = slot_x + 120;
 
   //TODO: sjekke om farge er riktig
-  slots = [];
-  get_type = slots[number];
-
-  if (x >= slot_x && x <= slot_x_max && get_type == type) {
-    setBox(box);
-    console.log("in slot", number, x, slot_x, slot_x_max);
-  } else {
-    console.log("not in slot", number, x, slot_x, slot_x_max);
+  if (on_slot_number >= all_slots.length) {
+    console.log("all_slots",all_slots)
+    return false;
   }
+  var slot_type = all_slots[on_slot_number][1];
+
+  if (x >= slot_x && x <= slot_x_max) {
+    if (slot_type == box_type) {
+      console.log(slot_type, "in slot", on_slot_number, x, slot_x, slot_x_max);
+      return true; //TODO: map or boolean array -> 0,1 occupied or not
+    } else {
+      console.log(on_slot_number, slot_type, box_type, "wrong color");
+    }
+  } else {
+    console.log("not in slot coor", on_slot_number, x, slot_x, slot_x_max);
+  }
+  return false;
 }
 
+const all_slots = [
+  [0, "blue"],
+  [1, "red"],
+];
 function App() {
+  //list of slot elements
+  const slotsEl = all_slots.map((slot) => <Slot number={slot[0]} type={slot[1]} />);
+
   return (
     <View style={styles.mainContainer}>
       <View style={styles.dropZone}>
@@ -127,8 +142,7 @@ function App() {
         <View
           style={{ flex: 1, flexDirection: "row", alignContent: "stretch" }}
         >
-          <Slot number="0" type="red" />
-          <Slot number="1" type="blue" />
+          {slotsEl}
         </View>
       </View>
 
