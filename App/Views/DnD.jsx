@@ -62,10 +62,11 @@ function MovableBox(props) {
 function Slot(props) {
   const number = props.number;
   const slot_type = props.type;
+  //TODO:
   const [box, setBox] = useState(0);
   useEffect(() => {
     EventRegister.addEventListener("dropBox", (data) => {
-      //unpacke dict
+      //unpacke dictionary
       var x = data.x;
       var y = data.y;
       var box_type = data.type;
@@ -76,19 +77,16 @@ function Slot(props) {
 
       if (x >= slot_x && x <= slot_x_max && slot_type == box_type) {
         console.log("in slot", number, x, slot_x, slot_x_max);
+
+        box == 0 ? setBox(0) : setBox(1);
       } else {
         console.log("not in slot", number, x, slot_x, slot_x_max);
       }
     });
   });
 
-  //TODO: oppdater state til slot når occupied
   if (box != 0) {
-    return (
-      <View>
-        <Text>slot {number}</Text>
-      </View>
-    );
+    return <View style={styles.slot_occ} />;
   }
 
   return <View style={number == "0" ? styles.slot0 : styles.slot1} />;
@@ -109,7 +107,7 @@ function isDropArea(box_type, x, y) {
 
   //TODO: sjekke om farge er riktig
   if (on_slot_number >= all_slots.length) {
-    console.log("all_slots",all_slots)
+    console.log("all_slots", all_slots);
     return false;
   }
   var slot_type = all_slots[on_slot_number][1];
@@ -133,7 +131,9 @@ const all_slots = [
 ];
 function App() {
   //list of slot elements
-  const slotsEl = all_slots.map((slot) => <Slot number={slot[0]} type={slot[1]} />);
+  const slotsEl = all_slots.map((slot) => (
+    <Slot number={slot[0]} type={slot[1]} />
+  ));
 
   return (
     <View style={styles.mainContainer}>
@@ -189,6 +189,12 @@ const styles = StyleSheet.create({
   },
   slot1: {
     backgroundColor: "pink",
+    width: FINAL_INT * 4,
+    height: FINAL_INT * 4,
+    alignItems: "stretch",
+  },
+  slot_occ: {
+    backgroundColor: "green",
     width: FINAL_INT * 4,
     height: FINAL_INT * 4,
     alignItems: "stretch",
