@@ -78,7 +78,7 @@ function Slot(props) {
       if (x >= slot_x && x <= slot_x_max && slot_type == box_type) {
         console.log("in slot", number, x, slot_x, slot_x_max);
 
-        box == 0 ? setBox(0) : setBox(1);
+        box == 0 ? setBox(1) : setBox(0);
       } else {
         console.log("not in slot", number, x, slot_x, slot_x_max);
       }
@@ -87,6 +87,7 @@ function Slot(props) {
 
   if (box != 0) {
     return <View style={styles.slot_occ} />;
+    //TODO: set slot to occupied
   }
 
   return <View style={number == "0" ? styles.slot0 : styles.slot1} />;
@@ -125,6 +126,7 @@ function isDropArea(box_type, x, y) {
   return false;
 }
 
+//the different types of slots
 const all_slots = [
   [0, "blue"],
   [1, "red"],
