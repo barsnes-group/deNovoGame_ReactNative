@@ -79,7 +79,9 @@ function Slot(props) {
 
       if (x >= slot_x && x <= slot_x_max && slot_type == box_type) {
         console.log("in slot", number, x, slot_x, slot_x_max);
-        !isOccupied ? setIsOccupied(true) : setIsOccupied(false);
+        if (!isOccupied) {
+          setIsOccupied(true);
+        }
       } else {
         console.log("not in slot", number, x, slot_x, slot_x_max);
       }
@@ -94,7 +96,6 @@ function Slot(props) {
     </View>
 
     );
-    //TODO: set slot to occupied
   }
 
   return <View style={number == "0" ? styles.slot0 : styles.slot1} />;
