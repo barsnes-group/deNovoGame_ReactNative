@@ -1,13 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 import { render } from "react-dom";
-import {
-  Text,
-  View,
-  PanResponder,
-  Animated,
-  StyleSheet,
-  Easing,
-} from "react-native";
+import { Text, View, PanResponder, Animated, StyleSheet } from "react-native";
 import { EventRegister } from "react-native-event-listeners";
 
 //TODO: når boks mottar pos, så må slot oppdatere seg som opptatt + visualisere hvis boks er på rett slot
@@ -42,12 +35,11 @@ function MovableBox(props) {
           if (isDropArea(type, x, y)) {
             //Animated.decay(pan, { toValue: { x: pan.x, y: pan.y } }).start();
             setVisible(false);
-            Animated.spring(pan, { toValue: { x: 0, y: 0 } }).start(({ finished }) => {
-              setVisible(true);
-              
-             });
-
-
+            Animated.spring(pan, { toValue: { x: 0, y: 0 } }).start(
+              ({ finished }) => {
+                setVisible(true);
+              }
+            );
           } else {
             Animated.spring(pan, { toValue: { x: 0, y: 0 } }).start();
           }
@@ -55,20 +47,16 @@ function MovableBox(props) {
       },
     })
   ).current;
-  if (!visible){
-    return(    <View>
-      <Animated.View
-        ref={myRef}
-        style={{
-          transform: [{ translateX: pan.x }, { translateY: pan.y }],
-        }}
-        {...panResponder.panHandlers}
-      >
-        <View style={styles.invisibleBox} />
-      </Animated.View>
-    </View>);
+  if (!visible) {
+    return (
+      <View>
+        <Animated.View>
+          <View style={styles.invisibleBox} />
+        </Animated.View>
+      </View>
+    );
   }
-  return(
+  return (
     <View>
       <Animated.View
         ref={myRef}
@@ -113,7 +101,7 @@ function Slot(props) {
     });
   });
 
-  if (isOccupied != 0) {
+  if (isOccupied) {
     return (
       <View style={styles.slot_occ}>
         <View style={slot_type == "red" ? styles.redBox : styles.blueBox} />
@@ -218,8 +206,7 @@ const styles = StyleSheet.create({
     width: FINAL_INT * 3,
     height: FINAL_INT * 3,
     borderWidth: 1,
-    opacity:0,
-
+    opacity: 0,
   },
   slot0: {
     backgroundColor: "lightblue",
