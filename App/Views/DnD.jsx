@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect } from "react";
 import { render } from "react-dom";
 import { Text, View, PanResponder, Animated, StyleSheet } from "react-native";
 import { EventRegister } from "react-native-event-listeners";
-
+ 
 //TODO: når boks mottar pos, så må slot oppdatere seg som opptatt + visualisere hvis boks er på rett slot
 
 /**
@@ -32,7 +32,9 @@ function MovableBox(props) {
           EventRegister.emit("dropBox", dict);
 
           if (isDropArea(type, x, y)) {
-            Animated.spring(pan, { toValue: { x: pan.x, y: pan.y } }).start();
+            Animated.decay(pan, { toValue: { x: pan.x, y: pan.y } }).start();
+            Animated.spring(pan, { toValue: { x: 0, y: 0 } }).start();
+
           } else {
             Animated.spring(pan, { toValue: { x: 0, y: 0 } }).start();
           }
@@ -63,7 +65,7 @@ function Slot(props) {
   const number = props.number;
   const slot_type = props.type;
   //TODO:
-  const [box, setBox] = useState(0);
+  const [isOccupied, setIsOccupied] = useState(false);
   useEffect(() => {
     EventRegister.addEventListener("dropBox", (data) => {
       //unpacke dictionary
@@ -77,16 +79,21 @@ function Slot(props) {
 
       if (x >= slot_x && x <= slot_x_max && slot_type == box_type) {
         console.log("in slot", number, x, slot_x, slot_x_max);
-
-        box == 0 ? setBox(1) : setBox(0);
+        !isOccupied ? setIsOccupied(true) : setIsOccupied(false);
       } else {
         console.log("not in slot", number, x, slot_x, slot_x_max);
       }
     });
   });
 
-  if (box != 0) {
-    return <View style={styles.slot_occ} />;
+  if (isOccupied != 0) {
+    return (
+    
+    <View style={styles.slot_occ}>
+      <View style={slot_type=="red" ? styles.redBox: styles.blueBox}/>
+    </View>
+
+    );
     //TODO: set slot to occupied
   }
 
@@ -99,7 +106,6 @@ function Slot(props) {
  * @param {any} box_type
  * @returns true/false
  */
-
 function isDropArea(box_type, x, y) {
   //TODO: sjekk hvilken slot nr du er på
   var on_slot_number = Math.floor(x / 120);
@@ -199,7 +205,8 @@ const styles = StyleSheet.create({
     backgroundColor: "green",
     width: FINAL_INT * 4,
     height: FINAL_INT * 4,
-    alignItems: "stretch",
+    alignItems:"center",
+    justifyContent: 'center',
   },
   boxContainer: {
     alignItems: "stretch",
