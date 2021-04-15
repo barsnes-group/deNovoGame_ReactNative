@@ -2,9 +2,6 @@ import React, { useRef, useState, useEffect } from "react";
 import { render } from "react-dom";
 import { Text, View, PanResponder, Animated, StyleSheet } from "react-native";
 import { EventRegister } from "react-native-event-listeners";
-
-//TODO: når boks mottar pos, så må slot oppdatere seg som opptatt + visualisere hvis boks er på rett slot
-
 /**
  * Component of movable boxes
  * @param {*} props
@@ -74,7 +71,6 @@ function MovableBox(props) {
 function Slot(props) {
   const number = props.number;
   const slot_type = props.type;
-  //TODO:
   const [isOccupied, setIsOccupied] = useState(false);
   useEffect(() => {
     EventRegister.addEventListener("dropBox", (data) => {
@@ -101,7 +97,6 @@ function Slot(props) {
   }
 }
 
-//TODO: 
 /**
  * @returns slot number if box on drop area, else returns null
  */
@@ -110,7 +105,7 @@ function isDropArea(box_type, x, y) {
   var slot_x = on_slot_number * 120;
   var slot_x_max = slot_x + 120;
 
-  if (on_slot_number >= all_slots.length) {  //TODO: slot i pos 0 funnker ikke, prob her??
+  if (on_slot_number >= all_slots.length) { 
     return null;
   }
   var slot_type = all_slots[on_slot_number][1];
