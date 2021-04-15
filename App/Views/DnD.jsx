@@ -22,13 +22,11 @@ function MovableBox(props) {
       onPanResponderMove: Animated.event([null, { dx: pan.x, dy: pan.y }]),
       onPanResponderRelease: (e, gesture) => {
         myRef.current.measureInWindow((x, y) => {
+          var slot_number = isDropArea(type, x, y);
           var dict = {
             type: type,
-            x: x,
-            y: y,
+            slot_number: slot_number,
           };
-          console.log(dict);
-          var slot_number = isDropArea(type, x, y);
           if (slot_number) {
             EventRegister.emit("dropBox", dict);
             setVisible(false);
@@ -79,19 +77,12 @@ function Slot(props) {
   const [isOccupied, setIsOccupied] = useState(false);
   useEffect(() => {
     EventRegister.addEventListener("dropBox", (data) => {
-      //unpacke dictionary
-      var x = data.x;
-      var y = data.y;
       var box_type = data.type;
+      var slot_number = data.slot_number;
 
-      var slot_x = 120 * number;
-      var slot_x_max = slot_x + 120;
-      var slot_y = 120;
-
-      if (x >= slot_x && x <= slot_x_max && slot_type == box_type) {
-        console.log("in slot", number, x, slot_x, slot_x_max);
-        //only one box per slot
+      if (slot_type == box_type && slot_number == number) {
         if (!isOccupied) {
+          console.log("slot occupied", number);
           setIsOccupied(true);
         }
       }
@@ -105,22 +96,20 @@ function Slot(props) {
       </View>
     );
   } else {
-    return <View style={number == "0" ? styles.slot0 : styles.slot1} />;
+    return <View style={slot_type == "blue" ? styles.slot0 : styles.slot1} />; 
   }
 }
 
+//TODO: 
 /**
  * @returns slot number if box on drop area, else returns null
  */
 function isDropArea(box_type, x, y) {
-  //TODO: sjekk hvilken slot nr du er på
   var on_slot_number = Math.floor(x / 120);
   var slot_x = on_slot_number * 120;
   var slot_x_max = slot_x + 120;
 
-  //TODO: sjekke om farge er riktig
   if (on_slot_number >= all_slots.length) {
-    console.log("all_slots", all_slots);
     return null;
   }
   var slot_type = all_slots[on_slot_number][1];
@@ -128,7 +117,7 @@ function isDropArea(box_type, x, y) {
   if (x >= slot_x && x <= slot_x_max) {
     if (slot_type == box_type) {
       console.log(slot_type, "in slot", on_slot_number, x, slot_x, slot_x_max);
-      return on_slot_number; //TODO: map or boolean array -> 0,1 occupied or not
+      return on_slot_number; 
     } else {
       console.log(on_slot_number, slot_type, box_type, "wrong color");
     }
@@ -142,6 +131,9 @@ function isDropArea(box_type, x, y) {
 const all_slots = [
   [0, "blue"],
   [1, "red"],
+  [2, "blue"],
+  [3, "red"],
+  [4, "blue"],
 ];
 function App() {
   //list of slot elements
@@ -199,7 +191,6 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent",
     width: FINAL_INT * 3,
     height: FINAL_INT * 3,
-    borderWidth: 1,
     opacity: 0,
   },
   slot0: {
@@ -207,12 +198,16 @@ const styles = StyleSheet.create({
     width: FINAL_INT * 4,
     height: FINAL_INT * 4,
     alignItems: "stretch",
+    borderWidth: 1,
+    borderColor: "black",
   },
   slot1: {
     backgroundColor: "pink",
     width: FINAL_INT * 4,
     height: FINAL_INT * 4,
     alignItems: "stretch",
+    borderWidth: 1,
+    borderColor: "black",
   },
   slot_occ: {
     backgroundColor: "green",
@@ -220,6 +215,8 @@ const styles = StyleSheet.create({
     height: FINAL_INT * 4,
     alignItems: "center",
     justifyContent: "center",
+    borderWidth: 1,
+    borderColor: "black",
   },
   boxContainer: {
     alignItems: "stretch",
