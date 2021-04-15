@@ -28,12 +28,9 @@ function MovableBox(props) {
             y: y,
           };
           console.log(dict);
-
-          //send med koordinater til drop event
-          EventRegister.emit("dropBox", dict);
-
-          if (isDropArea(type, x, y)) {
-            //Animated.decay(pan, { toValue: { x: pan.x, y: pan.y } }).start();
+          var slot_number = isDropArea(type, x, y);
+          if (slot_number) {
+            EventRegister.emit("dropBox", dict);
             setVisible(false);
             Animated.spring(pan, { toValue: { x: 0, y: 0 } }).start(
               ({ finished }) => {
@@ -107,16 +104,13 @@ function Slot(props) {
         <View style={slot_type == "red" ? styles.redBox : styles.blueBox} />
       </View>
     );
+  } else {
+    return <View style={number == "0" ? styles.slot0 : styles.slot1} />;
   }
-
-  return <View style={number == "0" ? styles.slot0 : styles.slot1} />;
 }
 
 /**
- * check if a box can go in any slot
- * @param {PanResonderGestureState} gesture
- * @param {any} box_type
- * @returns true/false
+ * @returns slot number if box on drop area, else returns null
  */
 function isDropArea(box_type, x, y) {
   //TODO: sjekk hvilken slot nr du er på
@@ -127,21 +121,21 @@ function isDropArea(box_type, x, y) {
   //TODO: sjekke om farge er riktig
   if (on_slot_number >= all_slots.length) {
     console.log("all_slots", all_slots);
-    return false;
+    return null;
   }
   var slot_type = all_slots[on_slot_number][1];
 
   if (x >= slot_x && x <= slot_x_max) {
     if (slot_type == box_type) {
       console.log(slot_type, "in slot", on_slot_number, x, slot_x, slot_x_max);
-      return true; //TODO: map or boolean array -> 0,1 occupied or not
+      return on_slot_number; //TODO: map or boolean array -> 0,1 occupied or not
     } else {
       console.log(on_slot_number, slot_type, box_type, "wrong color");
     }
   } else {
     console.log("not in slot coor", on_slot_number, x, slot_x, slot_x_max);
   }
-  return false;
+  return null;
 }
 
 //the different types of slots
