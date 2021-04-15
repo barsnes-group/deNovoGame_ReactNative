@@ -27,7 +27,7 @@ function MovableBox(props) {
             type: type,
             slot_number: slot_number,
           };
-          if (slot_number) {
+          if (slot_number !== null) {
             EventRegister.emit("dropBox", dict);
             setVisible(false);
             Animated.spring(pan, { toValue: { x: 0, y: 0 } }).start(
@@ -36,6 +36,7 @@ function MovableBox(props) {
               }
             );
           } else {
+            // moves back to start pos
             Animated.spring(pan, { toValue: { x: 0, y: 0 } }).start();
           }
         });
@@ -109,14 +110,14 @@ function isDropArea(box_type, x, y) {
   var slot_x = on_slot_number * 120;
   var slot_x_max = slot_x + 120;
 
-  if (on_slot_number >= all_slots.length) {
+  if (on_slot_number >= all_slots.length) {  //TODO: slot i pos 0 funnker ikke, prob her??
     return null;
   }
   var slot_type = all_slots[on_slot_number][1];
 
   if (x >= slot_x && x <= slot_x_max) {
     if (slot_type == box_type) {
-      console.log(slot_type, "in slot", on_slot_number, x, slot_x, slot_x_max);
+      console.log("VALID DORP AREA", slot_type, "in slot", on_slot_number, x, slot_x, slot_x_max);
       return on_slot_number; 
     } else {
       console.log(on_slot_number, slot_type, box_type, "wrong color");
