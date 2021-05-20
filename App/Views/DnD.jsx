@@ -129,7 +129,7 @@ const all_slots = [
   [1, "red"],
   [2, "blue"],
   [3, "red"],
-  [4, "blue"],
+ 
 ];
 function App() {
   //list of slot elements
@@ -164,7 +164,7 @@ function App() {
 export default App;
 
 //----------------STYLES----------------------
-let FINAL_INT = 30;
+let FINAL_INT = 25;
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
@@ -218,14 +218,16 @@ const styles = StyleSheet.create({
     alignItems: "stretch",
     backgroundColor: "powderblue",
     height: FINAL_INT * 8,
+    alignItems: "center",
   },
   dropZone: {
     alignItems: "stretch",
     backgroundColor: "#00334d",
-    height: FINAL_INT * 8,
+    height: FINAL_INT * 9,
+    alignItems: "center",
   },
   text: {
-    marginTop: 25,
+    marginTop: 45,
     marginLeft: 5,
     marginRight: 5,
     textAlign: "center",
